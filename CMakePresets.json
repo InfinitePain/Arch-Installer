@@ -1,0 +1,102 @@
+{
+	"version": 4,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 23
+	},
+	"configurePresets": [
+		{
+			"name": "L-base-GCC-Ninja",
+			"description": "compiler GCC generator Ninja on Linux",
+			"hidden": true,
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/out/build/${presetName}",
+			"installDir": "${sourceDir}/out/install/${presetName}",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "/usr/bin/gcc",
+				"CMAKE_CXX_COMPILER": "/usr/bin/g++"
+			},
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Linux"
+			}
+		},
+		{
+			"name": "L-x64-d-GCC-N",
+			"displayName": "x64 Debug GCC Ninja",
+			"inherits": "L-base-GCC-Ninja",
+			"architecture": {
+				"value": "x64"
+			},
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "L-x64-r-GCC-N",
+			"displayName": "x64 Release GCC Ninja",
+			"inherits": "L-x64-d-GCC-N",
+			"architecture": {
+				"value": "x64"
+			},
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		}
+	],
+	"buildPresets": [
+        {
+			"name": "base-clean-debug",
+			"hidden": true,
+			"configuration": "Debug",
+			"cleanFirst": true
+		},
+		{
+			"name": "base-clean-release",
+			"hidden": true,
+			"configuration": "Release",
+			"cleanFirst": true
+		},
+		{
+			"name": "base-debug",
+			"hidden": true,
+			"configuration": "Debug",
+			"cleanFirst": false
+		},
+		{
+			"name": "base-release",
+			"hidden": true,
+			"configuration": "Release",
+			"cleanFirst": false
+		},
+		{
+			"name": "cb-L-x64-d-GCC-N",
+			"displayName": "Clean Build",
+			"inherits": "base-clean-debug",
+			"targets":["all"],
+			"configurePreset": "L-x64-d-GCC-N"
+		},
+		{
+			"name": "cb-L-x64-r-GCC-N",
+			"displayName": "Clean Build",
+			"inherits": "base-clean-release",
+			"targets":["all"],
+			"configurePreset": "L-x64-r-GCC-N"
+		},
+		{
+			"name": "b-L-x64-d-GCC-N",
+			"displayName": "Build",
+			"inherits": "base-debug",
+			"targets":["all"],
+			"configurePreset": "L-x64-d-GCC-N"
+		},
+		{
+			"name": "b-L-x64-r-GCC-N",
+			"displayName": "Build",
+			"inherits": "base-release",
+			"targets":["all"],
+			"configurePreset": "L-x64-r-GCC-N"
+		}
+	]
+}
