@@ -13,35 +13,37 @@ Args parseArguments(int argc, const char* argv[]) {
     // Show help message
     if (std::find(cmdArgs.begin(), cmdArgs.end(), "-h") != cmdArgs.end()) {
         std::cout << "Arch Linux Installer\n"
-                  << "Usage: [options]\n"
-                  << "Options:\n"
-                  << "  -h          Show this help message\n"
-                  << "  -s [steps]  Specify installation steps (e.g., -s 1,2,3)\n"
-                  << "  -d          Enable debug mode (dry run, step-by-step execution)\n"
-                  << "\nThis program is a command-line installer for Arch Linux, "
-                  << "written in C++ and using ncurses for the UI.\n"
-                  << "Installation is divided into 3 steps:\n"
-                  << "  Step 1: Set the console keyboard layout, update the system clock, and partition the disks\n"
-                  << "  Step 2: Select the mirrors, and install the base packages\n"
-                  << "  Step 3: Configure the system and install the boot loader\n"
-                  << "In debug mode, no commands are run; instead, a dry run is performed. "
-                  << "If run under a debugger, a debug break occurs after each dry run step.\n"
-                  << "For more information, visit: www.github.com/InfinitePain/Arch-Installer\n";
+            << "Usage: [options]\n"
+            << "Options:\n"
+            << "  -h          Show this help message\n"
+            << "  -s [steps]  Specify installation steps (e.g., -s 1,2,3)\n"
+            << "  -d          Enable debug mode (dry run, step-by-step execution)\n"
+            << "  -v          Show version information\n"
+            << "\nThis program is a command-line installer for Arch Linux, "
+            << "written in C++ and using ncurses for the UI.\n"
+            << "Installation is divided into 3 steps:\n"
+            << "  Step 1: Set the console keyboard layout, update the system clock, and partition the disks\n"
+            << "  Step 2: Select the mirrors, and install the base packages\n"
+            << "  Step 3: Configure the system and install the boot loader\n"
+            << "If no steps are specified, all steps are run.\n"
+            << "In debug mode, no commands are run; instead, a dry run is performed. "
+            << "If run under a debugger, a debug break occurs after each dry run step.\n"
+            << "For more information, visit: www.github.com/InfinitePain/Arch-Installer\n";
         exit(0);
     }
 
     // Show version information
     if (std::find(cmdArgs.begin(), cmdArgs.end(), "-v") != cmdArgs.end()) {
         std::cout << "Arch Linux Installer Version "
-                  << INSTALLER_VERSION_MAJOR << "."
-                  << INSTALLER_VERSION_MINOR << "."
-                  << INSTALLER_VERSION_PATCH << std::endl;
+            << INSTALLER_VERSION_MAJOR << "."
+            << INSTALLER_VERSION_MINOR << "."
+            << INSTALLER_VERSION_PATCH << std::endl;
         exit(0);
     }
 
     auto findArg = [&cmdArgs](const std::string& flag) {
         return std::find(cmdArgs.begin(), cmdArgs.end(), flag);
-    };
+        };
 
     if (findArg("-d") != cmdArgs.end()) {
         args.debugMode = true;
@@ -54,8 +56,9 @@ Args parseArguments(int argc, const char* argv[]) {
         while (std::getline(ss, token, ',')) {
             args.steps.push_back(token);
         }
-    } else {
-        args.steps = {"1", "2", "3"};
+    }
+    else {
+        args.steps = { "1", "2", "3" };
     }
 
     return args;
