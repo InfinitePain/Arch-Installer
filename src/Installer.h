@@ -179,9 +179,21 @@ private:
 
     void _SystemClock() {
         // Might throw std::runtime_error cause of CLI::RunCommand() or CLI::RunInteractiveCommand()
-        // Might throw std::bad_alloc cause of Menu::Init()
+        // Might throw std::bad_alloc cause of Menu::Init() from _SetTimeZone()
         std::string command;
         std::string args;
+
+        command = "timedatectl";
+        if (m_Timezone.empty()) {
+            _SetTimeZone();
+        }
+        args = "set-timezone " + m_Timezone;
+        _RunCommand(command, args);
+    }
+
+    void _SetTimeZone() {
+        // Might throw std::runtime_error cause of CLI::RunCommand() or CLI::RunInteractiveCommand()
+        // Might throw std::bad_alloc cause of Menu::Init()
         std::string output;
         output = CLI::RunCommand("timedatectl", "list-timezones");
         if (output.empty()) {
@@ -200,10 +212,7 @@ private:
                 break;
             }
         }
-        command = "timedatectl";
-        args = "set-timezone " + menu.GetSelected();
         m_Timezone = menu.GetSelected();
-        _RunCommand(command, args);
     }
 
     void _PartitionDisks() {
@@ -307,7 +316,11 @@ private:
 
     void _TimeZone() {
         // Might throw std::runtime_error cause of CLI::RunCommand() or CLI::RunInteractiveCommand()
+        // Might throw std::bad_alloc cause of Menu::Init() from _SetTimeZone()
         std::string command = "ln";
+        if (m_Timezone.empty()) {
+            _SetTimeZone();
+        }
         std::string args = "-sf /usr/share/zoneinfo/" + m_Timezone + " /etc/localtime";
         _RunCommand(command, args);
         _RunCommand("hwclock", "--systohc");
@@ -332,6 +345,9 @@ private:
         args = "LANG=" + args;
         _WriteToFile(command, args);
         command = "/etc/vconsole.conf";
+        if (m_Keymap.empty()) {
+            _KBLayout();
+        }
         args = "KEYMAP=" + m_Keymap;
         _WriteToFile(command, args);
     }
